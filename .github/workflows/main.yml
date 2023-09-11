@@ -1,0 +1,27 @@
+name: Build and Publish Docker Image
+on:
+  push:
+    branches:
+      - main  # Replace with your main branch name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use an Ubuntu runner (or your preferred OS)
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker Image
+        run: docker build -t aspdiscovery/fintechapp:latest .
+        # Replace 'your-dockerhub-username' and 'your-image-name' with your Docker Hub username and image name
+      - name: Push Docker Image to Docker Hub
+        run: docker push aspdiscovery/fintechapp:latest
+        # Replace 'your-dockerhub-username' and 'your-image-name' with your Docker Hub username and image name
+
